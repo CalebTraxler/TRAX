@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TRAX · Real-Time AI Token Price Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Scrolling ticker -->
+  <div class="ticker-bar"><div class="ticker-track" id="ticker"></div></div>
+
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo">TRAX</div>
+      <div class="brand-sub">Real-Time AI&nbsp;Token Price Tracker</div>
+    </div>
+    <div class="spotbox">
+      <div class="spot-label">TRAX INDEX <span class="spot-live"><i></i>LIVE</span></div>
+      <div class="spot-row">
+        <span class="spot-value" id="spotValue">—</span>
+        <span class="spot-change" id="spotChange">—</span>
+      </div>
+      <div class="spot-meta" id="spotMeta">base 100 · Mar 2023</div>
+    </div>
+  </header>
+
+  <main>
+    <!-- KPI cards -->
+    <section class="kpis" id="kpis"></section>
+
+    <!-- Main index chart -->
+    <section class="panel chart-panel">
+      <div class="panel-head">
+        <div>
+          <h2>TRAX Cost Index</h2>
+          <p class="muted" id="indexSubtitle">Blended token cost across all providers · indexed to 100</p>
+        </div>
+        <div class="controls">
+          <div class="seg" id="metricSeg">
+            <button data-metric="blended" class="active">Blended</button>
+            <button data-metric="input">Input</button>
+            <button data-metric="output">Output</button>
+          </div>
+          <div class="seg" id="rangeSeg">
+            <button data-range="all" class="active">All</button>
+            <button data-range="24">24M</button>
+            <button data-range="12">12M</button>
+            <button data-range="6">6M</button>
+          </div>
+        </div>
+      </div>
+      <div class="chart-wrap"><canvas id="indexChart"></canvas></div>
+    </section>
+
+    <div class="grid-2">
+      <!-- Company comparison chart -->
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <h2>Provider Basket Prices</h2>
+            <p class="muted">Tier-weighted $/M tokens · click legend to toggle</p>
+          </div>
+        </div>
+        <div class="chart-wrap"><canvas id="companyChart"></canvas></div>
+      </section>
+
+      <!-- Company leaderboard -->
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <h2>Providers</h2>
+            <p class="muted">Current basket price &amp; lifetime move</p>
+          </div>
+        </div>
+        <div class="company-list" id="companyList"></div>
+      </section>
+    </div>
+
+    <!-- Model price table -->
+    <section class="panel">
+      <div class="panel-head">
+        <div>
+          <h2>Live Model Pricing</h2>
+          <p class="muted">Per-million-token list prices · sorted cheapest blended first</p>
+        </div>
+        <input id="modelSearch" class="search" placeholder="Filter models…" />
+      </div>
+      <div class="table-wrap">
+        <table class="model-table">
+          <thead>
+            <tr>
+              <th data-sort="label">Model</th>
+              <th data-sort="company">Provider</th>
+              <th data-sort="input" class="num">Input</th>
+              <th data-sort="output" class="num">Output</th>
+              <th data-sort="blended" class="num">Blended</th>
+              <th data-sort="changeSinceLaunch" class="num">Δ since launch</th>
+              <th data-sort="launched" class="num">Launched</th>
+            </tr>
+          </thead>
+          <tbody id="modelBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <footer class="foot">
+      <p><strong>Methodology.</strong> <span id="methodology"></span></p>
+      <p class="muted small">Prices are curated from public provider announcements (per million tokens, USD) and are approximate — edit <code>lib/trax.js</code> to refine. The <em>LIVE</em> ticker simulates intraday microstructure around the real current index level; underlying data updates when providers change list prices, not by the second. TRAX is an analytics tool, not financial advice or a tradable instrument.</p>
+      <p class="muted small">TRAX · data as of <span id="asOf"></span> · index base Mar 2023 = 100</p>
+    </footer>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
