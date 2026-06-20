@@ -3,37 +3,61 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TRAX · Real-Time AI Token Price Tracker</title>
+  <title>TRAX · AI Token Price Index</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <!-- Scrolling ticker -->
+  <!-- Top ticker -->
   <div class="ticker-bar"><div class="ticker-track" id="ticker"></div></div>
 
-  <header class="topbar">
-    <div class="brand">
-      <div class="logo">TRAX</div>
-      <div class="brand-sub">Real-Time AI&nbsp;Token Price Tracker</div>
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="nav-left">
+      <span class="wordmark">TRAX</span>
+      <span class="wordmark-tag">AI Token Index</span>
     </div>
-    <div class="spotbox">
-      <div class="spot-label">TRAX INDEX <span class="spot-live"><i></i>LIVE</span></div>
-      <div class="spot-row">
-        <span class="spot-value" id="spotValue">—</span>
-        <span class="spot-change" id="spotChange">—</span>
+    <div class="nav-links">
+      <a href="#overview" class="active">Overview</a>
+      <a href="#providers">Providers</a>
+      <a href="#models">Models</a>
+      <a href="#about">Methodology</a>
+    </div>
+    <div class="nav-right">
+      <span class="mkt-status"><i></i>LIVE</span>
+      <div class="nav-quote">
+        <span class="nav-quote-val" id="navValue">—</span>
+        <span class="nav-quote-chg" id="navChange">—</span>
       </div>
-      <div class="spot-meta" id="spotMeta">base 100 · Mar 2023</div>
     </div>
-  </header>
+  </nav>
 
   <main>
-    <!-- KPI cards -->
+    <!-- Quote hero -->
+    <section class="quote">
+      <div class="quote-main">
+        <div class="quote-symbol">
+          <span class="sym">TRX</span>
+          <span class="sym-name">TRAX Cost Index</span>
+          <span class="sym-tag" id="metricTag">Blended</span>
+        </div>
+        <div class="quote-price">
+          <span class="qp-value" id="spotValue">—</span>
+          <span class="qp-change" id="spotChange">—</span>
+        </div>
+        <div class="quote-meta" id="spotMeta">base 100 · March 2023</div>
+      </div>
+      <div class="quote-stats" id="heroStats"></div>
+      <div class="quote-spark"><canvas id="heroSpark"></canvas></div>
+    </section>
+
+    <!-- KPI strip -->
     <section class="kpis" id="kpis"></section>
 
     <!-- Main index chart -->
-    <section class="panel chart-panel">
+    <section class="panel chart-panel" id="overview">
       <div class="panel-head">
         <div>
           <h2>TRAX Cost Index</h2>
@@ -56,13 +80,13 @@
       <div class="chart-wrap"><canvas id="indexChart"></canvas></div>
     </section>
 
-    <div class="grid-2">
+    <div class="grid-2" id="providers">
       <!-- Company comparison chart -->
       <section class="panel">
         <div class="panel-head">
           <div>
             <h2>Provider Basket Prices</h2>
-            <p class="muted">Tier-weighted $/M tokens · click legend to toggle</p>
+            <p class="muted">Tier-weighted $/M tokens · log scale · click legend to toggle</p>
           </div>
         </div>
         <div class="chart-wrap"><canvas id="companyChart"></canvas></div>
@@ -81,7 +105,7 @@
     </div>
 
     <!-- Model price table -->
-    <section class="panel">
+    <section class="panel" id="models">
       <div class="panel-head">
         <div>
           <h2>Live Model Pricing</h2>
@@ -107,10 +131,21 @@
       </div>
     </section>
 
-    <footer class="foot">
-      <p><strong>Methodology.</strong> <span id="methodology"></span></p>
-      <p class="muted small">Prices are curated from public provider announcements (per million tokens, USD) and are approximate — edit <code>lib/trax.js</code> to refine. The <em>LIVE</em> ticker simulates intraday microstructure around the real current index level; underlying data updates when providers change list prices, not by the second. TRAX is an analytics tool, not financial advice or a tradable instrument.</p>
-      <p class="muted small">TRAX · data as of <span id="asOf"></span> · index base Mar 2023 = 100</p>
+    <footer class="foot" id="about">
+      <div class="foot-grid">
+        <div>
+          <h3>Methodology</h3>
+          <p id="methodology"></p>
+        </div>
+        <div>
+          <h3>Data &amp; disclaimer</h3>
+          <p class="muted small">Prices are curated from public provider announcements (per million tokens, USD) and are approximate — edit <code>lib/trax.js</code> to refine. The <em>LIVE</em> readout simulates intraday microstructure around the real current index level; underlying data updates when providers change list prices, not by the second. TRAX is an analytics tool, not financial advice or a tradable instrument.</p>
+        </div>
+      </div>
+      <div class="foot-bar">
+        <span class="wordmark sm">TRAX</span>
+        <span class="muted small">Data as of <span id="asOf"></span> · index base March 2023 = 100</span>
+      </div>
     </footer>
   </main>
 
