@@ -3,153 +3,140 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TRAX · AI Token Price Index</title>
+  <title>TRAX · AI Token Cost Terminal</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <!-- Top ticker -->
+  <!-- Scrolling ticker -->
   <div class="ticker-bar"><div class="ticker-track" id="ticker"></div></div>
 
-  <!-- Navigation -->
-  <nav class="nav">
-    <div class="nav-left">
-      <span class="wordmark">TRAX</span>
-      <span class="wordmark-tag">AI Token Index</span>
+  <!-- Symbol bar -->
+  <header class="symbolbar">
+    <div class="sym-id">
+      <span class="brand">TRAX</span>
+      <span class="sym-divider"></span>
+      <span class="sym-ticker" id="symTicker">TRX</span>
+      <span class="sym-name" id="symName">TRAX Cost Index</span>
+      <span class="sym-badge" id="symBadge">INDEX</span>
+      <span class="disclaimer-tag" title="TRAX is an analytics tool, not financial advice or a tradable instrument.">⚠ Analytics only · not a tradable instrument</span>
     </div>
-    <div class="nav-links">
-      <a href="#overview" class="active">Overview</a>
-      <a href="#providers">Providers</a>
-      <a href="#models">Models</a>
-      <a href="#about">Methodology</a>
+    <div class="sym-quote">
+      <span class="sym-last" id="symLast">—</span>
+      <span class="sym-chg" id="symChg">—</span>
     </div>
-    <div class="nav-right">
+    <div class="sym-right">
+      <div class="seg" id="metricSeg">
+        <button data-metric="blended" class="active">Blended</button>
+        <button data-metric="input">Input</button>
+        <button data-metric="output">Output</button>
+      </div>
       <span class="mkt-status"><i></i>LIVE</span>
-      <div class="nav-quote">
-        <span class="nav-quote-val" id="navValue">—</span>
-        <span class="nav-quote-chg" id="navChange">—</span>
+    </div>
+  </header>
+
+  <!-- Workspace -->
+  <div class="tv-body">
+    <!-- Left tool rail -->
+    <aside class="tv-tools" id="tools">
+      <button data-tool="cross" class="active" title="Crosshair">
+        <svg viewBox="0 0 24 24"><path d="M12 3v18M3 12h18" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="2.2" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+      </button>
+      <span class="tool-div"></span>
+      <button data-tool="candles" class="active" title="Candlesticks">
+        <svg viewBox="0 0 24 24"><path d="M7 4v4M7 16v4M17 3v5M17 17v4" stroke="currentColor" stroke-width="1.5"/><rect x="4.5" y="8" width="5" height="8" stroke="currentColor" stroke-width="1.5" fill="none"/><rect x="14.5" y="8" width="5" height="9" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
+      </button>
+      <button data-tool="area" title="Area">
+        <svg viewBox="0 0 24 24"><path d="M3 16l5-6 4 3 5-7 4 4v7H3z" fill="currentColor" opacity=".25"/><path d="M3 16l5-6 4 3 5-7 4 4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+      </button>
+      <span class="tool-div"></span>
+      <button data-tool="log" title="Log / linear scale">
+        <svg viewBox="0 0 24 24"><path d="M4 20V4M4 20h16M7 16c3 0 4-8 13-9" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+      </button>
+      <button data-tool="reset" title="Reset zoom">
+        <svg viewBox="0 0 24 24"><path d="M4 9a8 8 0 1 1-1 4" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M3 5v4h4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+      </button>
+      <button data-tool="snapshot" title="Save chart image">
+        <svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="2" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12.5" r="3" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 6l1.5-2h5L16 6" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+      </button>
+      <button data-tool="full" title="Fullscreen chart">
+        <svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+      </button>
+    </aside>
+
+    <!-- Chart -->
+    <main class="tv-chart" id="chartPane">
+      <div class="chart-toolbar">
+        <div class="seg" id="intervalSeg">
+          <button data-range="all" class="active">All</button>
+          <button data-range="24">24M</button>
+          <button data-range="12">12M</button>
+          <button data-range="6">6M</button>
+        </div>
+        <div class="seg" id="typeSeg">
+          <button data-type="candles" class="active">Candles</button>
+          <button data-type="area">Area</button>
+        </div>
+        <span class="tf-note">monthly · OHLC from intramonth repricing events</span>
+      </div>
+      <div class="chart-legend" id="legend"></div>
+      <div class="chart-host"><canvas id="tvCanvas"></canvas></div>
+    </main>
+
+    <!-- Right watchlist -->
+    <aside class="tv-watch">
+      <div class="watch-head">Watchlist <span>token cost basket</span></div>
+      <div class="watch-cols"><span>Symbol</span><span class="r">Last</span><span class="r">Chg</span></div>
+      <div class="watch-list" id="watchList"></div>
+      <div class="watch-foot" id="watchFoot"></div>
+    </aside>
+  </div>
+
+  <!-- Screener -->
+  <section class="screener">
+    <div class="screener-head">
+      <div class="sh-tabs"><span class="active">Models</span></div>
+      <input id="modelSearch" class="search" placeholder="Filter symbols…" />
+    </div>
+    <div class="table-wrap">
+      <table class="model-table">
+        <thead>
+          <tr>
+            <th data-sort="label">Symbol</th>
+            <th data-sort="company">Provider</th>
+            <th data-sort="input" class="num">Input</th>
+            <th data-sort="output" class="num">Output</th>
+            <th data-sort="blended" class="num">Blended</th>
+            <th data-sort="changeSinceLaunch" class="num">Δ since launch</th>
+            <th data-sort="launched" class="num">Launched</th>
+          </tr>
+        </thead>
+        <tbody id="modelBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer class="foot">
+    <div class="foot-grid">
+      <div>
+        <h3>Methodology</h3>
+        <p id="methodology"></p>
+        <p class="muted small">Candles are real: each monthly bar's open/high/low/close is the TRAX index evaluated at every provider repricing date within the month, and volume is the count of those repricing events.</p>
+      </div>
+      <div>
+        <h3>Disclaimer</h3>
+        <p class="muted small"><strong>TRAX is an analytics tool, not financial advice or a tradable instrument.</strong> There is no token futures market — list prices change on announcement, not by the second. The <em>LIVE</em> readout simulates microstructure around the real current index level for presentation only. Prices are curated from public provider announcements (per million tokens, USD); edit <code>lib/trax.js</code> to refine.</p>
       </div>
     </div>
-  </nav>
-
-  <main>
-    <!-- Quote hero -->
-    <section class="quote">
-      <div class="quote-main">
-        <div class="quote-symbol">
-          <span class="sym">TRX</span>
-          <span class="sym-name">TRAX Cost Index</span>
-          <span class="sym-tag" id="metricTag">Blended</span>
-        </div>
-        <div class="quote-price">
-          <span class="qp-value" id="spotValue">—</span>
-          <span class="qp-change" id="spotChange">—</span>
-        </div>
-        <div class="quote-meta" id="spotMeta">base 100 · March 2023</div>
-      </div>
-      <div class="quote-stats" id="heroStats"></div>
-      <div class="quote-spark"><canvas id="heroSpark"></canvas></div>
-    </section>
-
-    <!-- KPI strip -->
-    <section class="kpis" id="kpis"></section>
-
-    <!-- Main index chart -->
-    <section class="panel chart-panel" id="overview">
-      <div class="panel-head">
-        <div>
-          <h2>TRAX Cost Index</h2>
-          <p class="muted" id="indexSubtitle">Blended token cost across all providers · indexed to 100</p>
-        </div>
-        <div class="controls">
-          <div class="seg" id="metricSeg">
-            <button data-metric="blended" class="active">Blended</button>
-            <button data-metric="input">Input</button>
-            <button data-metric="output">Output</button>
-          </div>
-          <div class="seg" id="rangeSeg">
-            <button data-range="all" class="active">All</button>
-            <button data-range="24">24M</button>
-            <button data-range="12">12M</button>
-            <button data-range="6">6M</button>
-          </div>
-        </div>
-      </div>
-      <div class="chart-wrap"><canvas id="indexChart"></canvas></div>
-    </section>
-
-    <div class="grid-2" id="providers">
-      <!-- Company comparison chart -->
-      <section class="panel">
-        <div class="panel-head">
-          <div>
-            <h2>Provider Basket Prices</h2>
-            <p class="muted">Tier-weighted $/M tokens · log scale · click legend to toggle</p>
-          </div>
-        </div>
-        <div class="chart-wrap"><canvas id="companyChart"></canvas></div>
-      </section>
-
-      <!-- Company leaderboard -->
-      <section class="panel">
-        <div class="panel-head">
-          <div>
-            <h2>Providers</h2>
-            <p class="muted">Current basket price &amp; lifetime move</p>
-          </div>
-        </div>
-        <div class="company-list" id="companyList"></div>
-      </section>
+    <div class="foot-bar">
+      <span class="brand sm">TRAX</span>
+      <span class="muted small">Data as of <span id="asOf"></span> · index base March 2023 = 100 · view-only terminal</span>
     </div>
+  </footer>
 
-    <!-- Model price table -->
-    <section class="panel" id="models">
-      <div class="panel-head">
-        <div>
-          <h2>Live Model Pricing</h2>
-          <p class="muted">Per-million-token list prices · sorted cheapest blended first</p>
-        </div>
-        <input id="modelSearch" class="search" placeholder="Filter models…" />
-      </div>
-      <div class="table-wrap">
-        <table class="model-table">
-          <thead>
-            <tr>
-              <th data-sort="label">Model</th>
-              <th data-sort="company">Provider</th>
-              <th data-sort="input" class="num">Input</th>
-              <th data-sort="output" class="num">Output</th>
-              <th data-sort="blended" class="num">Blended</th>
-              <th data-sort="changeSinceLaunch" class="num">Δ since launch</th>
-              <th data-sort="launched" class="num">Launched</th>
-            </tr>
-          </thead>
-          <tbody id="modelBody"></tbody>
-        </table>
-      </div>
-    </section>
-
-    <footer class="foot" id="about">
-      <div class="foot-grid">
-        <div>
-          <h3>Methodology</h3>
-          <p id="methodology"></p>
-        </div>
-        <div>
-          <h3>Data &amp; disclaimer</h3>
-          <p class="muted small">Prices are curated from public provider announcements (per million tokens, USD) and are approximate — edit <code>lib/trax.js</code> to refine. The <em>LIVE</em> readout simulates intraday microstructure around the real current index level; underlying data updates when providers change list prices, not by the second. TRAX is an analytics tool, not financial advice or a tradable instrument.</p>
-        </div>
-      </div>
-      <div class="foot-bar">
-        <span class="wordmark sm">TRAX</span>
-        <span class="muted small">Data as of <span id="asOf"></span> · index base March 2023 = 100</span>
-      </div>
-    </footer>
-  </main>
-
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="chart.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
