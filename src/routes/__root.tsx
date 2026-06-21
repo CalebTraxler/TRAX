@@ -93,6 +93,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "TRAX — AI Token Cost Index" },
+      { name: "description", content: "TRAX Enhancements expands a project with new models and a more structured website." },
+      { property: "og:description", content: "TRAX Enhancements expands a project with new models and a more structured website." },
+      { name: "twitter:description", content: "TRAX Enhancements expands a project with new models and a more structured website." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/e8e6fcf3-ebc5-45e7-a512-30e2a81e8f61/id-preview-5c01b370--d64aaf72-0b18-4810-8780-2491cd62938e.lovable.app-1782002335091.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/e8e6fcf3-ebc5-45e7-a512-30e2a81e8f61/id-preview-5c01b370--d64aaf72-0b18-4810-8780-2491cd62938e.lovable.app-1782002335091.png" },
     ],
     links: [
       {
