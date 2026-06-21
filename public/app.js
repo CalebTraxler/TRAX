@@ -136,6 +136,19 @@ function renderTicker() {
 function renderMeta() {
   $('#methodology').textContent = state.data.meta.methodology;
   $('#asOf').textContent = state.data.meta.asOf;
+  renderRefreshLabel();
+}
+
+function relTime(iso) {
+  if (!iso) return 'live';
+  const s = Math.max(0, (Date.now() - new Date(iso).getTime()) / 1000);
+  if (s < 90) return 'just now';
+  if (s < 3600) return Math.round(s / 60) + 'm ago';
+  if (s < 86400) return Math.round(s / 3600) + 'h ago';
+  return Math.round(s / 86400) + 'd ago';
+}
+function renderRefreshLabel() {
+  $('#refreshLabel').textContent = relTime(state.data.meta.lastRefresh);
 }
 
 // ---------------------------------------------------------------- live spot
@@ -193,6 +206,18 @@ $('#tools').addEventListener('click', (e) => {
   else if (t === 'reset') chart.reset();
   else if (t === 'snapshot') chart.snapshot();
   else if (t === 'full') { const el = $('#chartPane'); document.fullscreenElement ? document.exitFullscreen() : el.requestFullscreen(); }
+});
+
+$('#refreshBtn').addEventListener('click', async (e) => {
+  const btn = e.currentTarget;
+  btn.classList.add('spin'); $('#refreshLabel').textContent = 'fetching…';
+  try {
+    const r = await (await fetch('/api/refresh')).json();
+    await load();
+    $('#refreshLabel').textContent = r.ok ? (r.changed ? `${r.changed} updated` : 'up to date') : 'offline';
+    setTimeout(renderRefreshLabel, 2500);
+  } catch (_) { $('#refreshLabel').textContent = 'offline'; }
+  finally { btn.classList.remove('spin'); }
 });
 
 $('#modelSearch').addEventListener('input', (e) => { state.search = e.target.value.toLowerCase(); renderTable(); });

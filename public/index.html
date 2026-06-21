@@ -33,6 +33,10 @@
         <button data-metric="input">Input</button>
         <button data-metric="output">Output</button>
       </div>
+      <button class="refresh-btn" id="refreshBtn" title="Pull live prices from OpenRouter now">
+        <svg viewBox="0 0 24 24"><path d="M20 11a8 8 0 1 0-.5 3.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M20 4v5h-5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
+        <span id="refreshLabel">live</span>
+      </button>
       <span class="mkt-status"><i></i>LIVE</span>
     </div>
   </header>
@@ -124,6 +128,7 @@
         <h3>Methodology</h3>
         <p id="methodology"></p>
         <p class="muted small">Candles are real: each monthly bar's open/high/low/close is the TRAX index evaluated at every provider repricing date within the month, and volume is the count of those repricing events.</p>
+        <p class="muted small">Current prices auto-refresh from the <a href="https://openrouter.ai" target="_blank" rel="noopener" style="color:var(--accent)">OpenRouter</a> live models API (23 of 45 models map to a live slug); older/retired models keep their curated history. Hit the ↻ button to pull now.</p>
       </div>
       <div>
         <h3>Disclaimer</h3>

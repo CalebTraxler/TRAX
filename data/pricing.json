@@ -1,0 +1,761 @@
+{
+  "meta": {
+    "lastRefresh": "2026-06-21T00:14:57.093Z",
+    "source": "https://openrouter.ai/api/v1/models",
+    "note": "Historical price points are curated from public provider announcements (per million tokens, USD). `npm run refresh` pulls current live prices from OpenRouter for models with an `or` slug and appends a dated point when the price has changed."
+  },
+  "companies": {
+    "openai": {
+      "name": "OpenAI",
+      "weight": 0.3,
+      "color": "#10a37f"
+    },
+    "anthropic": {
+      "name": "Anthropic",
+      "weight": 0.22,
+      "color": "#d97757"
+    },
+    "google": {
+      "name": "Google",
+      "weight": 0.2,
+      "color": "#4285f4"
+    },
+    "meta": {
+      "name": "Meta",
+      "weight": 0.08,
+      "color": "#0866ff"
+    },
+    "mistral": {
+      "name": "Mistral",
+      "weight": 0.05,
+      "color": "#ff7000"
+    },
+    "xai": {
+      "name": "xAI",
+      "weight": 0.05,
+      "color": "#9ca3af"
+    },
+    "deepseek": {
+      "name": "DeepSeek",
+      "weight": 0.05,
+      "color": "#7c3aed"
+    },
+    "cohere": {
+      "name": "Cohere",
+      "weight": 0.05,
+      "color": "#39c5bb"
+    }
+  },
+  "models": [
+    {
+      "id": "gpt-3.5-turbo",
+      "company": "openai",
+      "label": "GPT-3.5 Turbo",
+      "tier": "small",
+      "or": "openai/gpt-3.5-turbo",
+      "prices": [
+        {
+          "date": "2023-03-01",
+          "input": 1.5,
+          "output": 2
+        },
+        {
+          "date": "2023-11-06",
+          "input": 1,
+          "output": 2
+        },
+        {
+          "date": "2024-01-25",
+          "input": 0.5,
+          "output": 1.5
+        }
+      ]
+    },
+    {
+      "id": "gpt-4",
+      "company": "openai",
+      "label": "GPT-4 (8k)",
+      "tier": "flagship",
+      "or": null,
+      "prices": [
+        {
+          "date": "2023-03-14",
+          "input": 30,
+          "output": 60
+        }
+      ]
+    },
+    {
+      "id": "gpt-4-turbo",
+      "company": "openai",
+      "label": "GPT-4 Turbo",
+      "tier": "flagship",
+      "or": "openai/gpt-4-turbo",
+      "prices": [
+        {
+          "date": "2023-11-06",
+          "input": 10,
+          "output": 30
+        }
+      ]
+    },
+    {
+      "id": "gpt-4o",
+      "company": "openai",
+      "label": "GPT-4o",
+      "tier": "flagship",
+      "or": "openai/gpt-4o",
+      "prices": [
+        {
+          "date": "2024-05-13",
+          "input": 5,
+          "output": 15
+        },
+        {
+          "date": "2024-08-06",
+          "input": 2.5,
+          "output": 10
+        }
+      ]
+    },
+    {
+      "id": "gpt-4o-mini",
+      "company": "openai",
+      "label": "GPT-4o mini",
+      "tier": "small",
+      "or": "openai/gpt-4o-mini",
+      "prices": [
+        {
+          "date": "2024-07-18",
+          "input": 0.15,
+          "output": 0.6
+        }
+      ]
+    },
+    {
+      "id": "o1",
+      "company": "openai",
+      "label": "o1",
+      "tier": "flagship",
+      "or": "openai/o1",
+      "prices": [
+        {
+          "date": "2024-12-05",
+          "input": 15,
+          "output": 60
+        }
+      ]
+    },
+    {
+      "id": "o3-mini",
+      "company": "openai",
+      "label": "o3-mini",
+      "tier": "mid",
+      "or": "openai/o3-mini",
+      "prices": [
+        {
+          "date": "2025-01-31",
+          "input": 1.1,
+          "output": 4.4
+        }
+      ]
+    },
+    {
+      "id": "gpt-4.1",
+      "company": "openai",
+      "label": "GPT-4.1",
+      "tier": "flagship",
+      "or": "openai/gpt-4.1",
+      "prices": [
+        {
+          "date": "2025-04-14",
+          "input": 2,
+          "output": 8
+        }
+      ]
+    },
+    {
+      "id": "gpt-4.1-mini",
+      "company": "openai",
+      "label": "GPT-4.1 mini",
+      "tier": "small",
+      "or": "openai/gpt-4.1-mini",
+      "prices": [
+        {
+          "date": "2025-04-14",
+          "input": 0.4,
+          "output": 1.6
+        }
+      ]
+    },
+    {
+      "id": "claude-2",
+      "company": "anthropic",
+      "label": "Claude 2",
+      "tier": "flagship",
+      "or": null,
+      "prices": [
+        {
+          "date": "2023-07-11",
+          "input": 8,
+          "output": 24
+        }
+      ]
+    },
+    {
+      "id": "claude-instant",
+      "company": "anthropic",
+      "label": "Claude Instant",
+      "tier": "small",
+      "or": null,
+      "prices": [
+        {
+          "date": "2023-07-11",
+          "input": 0.8,
+          "output": 2.4
+        }
+      ]
+    },
+    {
+      "id": "claude-3-opus",
+      "company": "anthropic",
+      "label": "Claude 3 Opus",
+      "tier": "flagship",
+      "or": null,
+      "prices": [
+        {
+          "date": "2024-03-04",
+          "input": 15,
+          "output": 75
+        }
+      ]
+    },
+    {
+      "id": "claude-3-sonnet",
+      "company": "anthropic",
+      "label": "Claude 3 Sonnet",
+      "tier": "mid",
+      "or": null,
+      "prices": [
+        {
+          "date": "2024-03-04",
+          "input": 3,
+          "output": 15
+        }
+      ]
+    },
+    {
+      "id": "claude-3-haiku",
+      "company": "anthropic",
+      "label": "Claude 3 Haiku",
+      "tier": "small",
+      "or": "anthropic/claude-3-haiku",
+      "prices": [
+        {
+          "date": "2024-03-04",
+          "input": 0.25,
+          "output": 1.25
+        }
+      ]
+    },
+    {
+      "id": "claude-3-5-sonnet",
+      "company": "anthropic",
+      "label": "Claude 3.5 Sonnet",
+      "tier": "flagship",
+      "or": null,
+      "prices": [
+        {
+          "date": "2024-06-20",
+          "input": 3,
+          "output": 15
+        }
+      ]
+    },
+    {
+      "id": "claude-3-5-haiku",
+      "company": "anthropic",
+      "label": "Claude 3.5 Haiku",
+      "tier": "small",
+      "or": "anthropic/claude-3.5-haiku",
+      "prices": [
+        {
+          "date": "2024-11-04",
+          "input": 0.8,
+          "output": 4
+        }
+      ]
+    },
+    {
+      "id": "claude-3-7-sonnet",
+      "company": "anthropic",
+      "label": "Claude 3.7 Sonnet",
+      "tier": "flagship",
+      "or": null,
+      "prices": [
+        {
+          "date": "2025-02-24",
+          "input": 3,
+          "output": 15
+        }
+      ]
+    },
+    {
+      "id": "claude-opus-4",
+      "company": "anthropic",
+      "label": "Claude Opus 4",
+      "tier": "flagship",
+      "or": "anthropic/claude-opus-4",
+      "prices": [
+        {
+          "date": "2025-05-22",
+          "input": 15,
+          "output": 75
+        }
+      ]
+    },
+    {
+      "id": "claude-sonnet-4",
+      "company": "anthropic",
+      "label": "Claude Sonnet 4",
+      "tier": "mid",
+      "or": "anthropic/claude-sonnet-4",
+      "prices": [
+        {
+          "date": "2025-05-22",
+          "input": 3,
+          "output": 15
+        }
+      ]
+    },
+    {
+      "id": "gemini-1.0-pro",
+      "company": "google",
+      "label": "Gemini 1.0 Pro",
+      "tier": "flagship",
+      "or": null,
+      "prices": [
+        {
+          "date": "2023-12-13",
+          "input": 0.5,
+          "output": 1.5
+        }
+      ]
+    },
+    {
+      "id": "gemini-1.5-pro",
+      "company": "google",
+      "label": "Gemini 1.5 Pro",
+      "tier": "flagship",
+      "or": null,
+      "prices": [
+        {
+          "date": "2024-05-14",
+          "input": 3.5,
+          "output": 10.5
+        },
+        {
+          "date": "2024-10-01",
+          "input": 1.25,
+          "output": 5
+        }
+      ]
+    },
+    {
+      "id": "gemini-1.5-flash",
+      "company": "google",
+      "label": "Gemini 1.5 Flash",
+      "tier": "small",
+      "or": null,
+      "prices": [
+        {
+          "date": "2024-05-14",
+          "input": 0.075,
+          "output": 0.3
+        }
+      ]
+    },
+    {
+      "id": "gemini-2.0-flash",
+      "company": "google",
+      "label": "Gemini 2.0 Flash",
+      "tier": "mid",
+      "or": null,
+      "prices": [
+        {
+          "date": "2025-02-05",
+          "input": 0.1,
+          "output": 0.4
+        }
+      ]
+    },
+    {
+      "id": "gemini-2.5-pro",
+      "company": "google",
+      "label": "Gemini 2.5 Pro",
+      "tier": "flagship",
+      "or": "google/gemini-2.5-pro",
+      "prices": [
+        {
+          "date": "2025-03-25",
+          "input": 1.25,
+          "output": 10
+        }
+      ]
+    },
+    {
+      "id": "gemini-2.5-flash",
+      "company": "google",
+      "label": "Gemini 2.5 Flash",
+      "tier": "small",
+      "or": "google/gemini-2.5-flash",
+      "prices": [
+        {
+          "date": "2025-04-17",
+          "input": 0.3,
+          "output": 2.5
+        }
+      ]
+    },
+    {
+      "id": "llama-2-70b",
+      "company": "meta",
+      "label": "Llama 2 70B",
+      "tier": "flagship",
+      "or": null,
+      "prices": [
+        {
+          "date": "2023-07-18",
+          "input": 1,
+          "output": 1
+        }
+      ]
+    },
+    {
+      "id": "llama-3-70b",
+      "company": "meta",
+      "label": "Llama 3 70B",
+      "tier": "flagship",
+      "or": null,
+      "prices": [
+        {
+          "date": "2024-04-18",
+          "input": 0.9,
+          "output": 0.9
+        }
+      ]
+    },
+    {
+      "id": "llama-3-8b",
+      "company": "meta",
+      "label": "Llama 3 8B",
+      "tier": "small",
+      "or": "meta-llama/llama-3-8b-instruct",
+      "prices": [
+        {
+          "date": "2024-04-18",
+          "input": 0.2,
+          "output": 0.2
+        },
+        {
+          "date": "2026-06-21",
+          "input": 0.14,
+          "output": 0.14
+        }
+      ]
+    },
+    {
+      "id": "llama-3.1-405b",
+      "company": "meta",
+      "label": "Llama 3.1 405B",
+      "tier": "flagship",
+      "or": null,
+      "prices": [
+        {
+          "date": "2024-07-23",
+          "input": 3,
+          "output": 3
+        }
+      ]
+    },
+    {
+      "id": "llama-3.1-70b",
+      "company": "meta",
+      "label": "Llama 3.1 70B",
+      "tier": "mid",
+      "or": "meta-llama/llama-3.1-70b-instruct",
+      "prices": [
+        {
+          "date": "2024-07-23",
+          "input": 0.9,
+          "output": 0.9
+        },
+        {
+          "date": "2026-06-21",
+          "input": 0.4,
+          "output": 0.4
+        }
+      ]
+    },
+    {
+      "id": "llama-3.3-70b",
+      "company": "meta",
+      "label": "Llama 3.3 70B",
+      "tier": "mid",
+      "or": "meta-llama/llama-3.3-70b-instruct",
+      "prices": [
+        {
+          "date": "2024-12-06",
+          "input": 0.6,
+          "output": 0.6
+        },
+        {
+          "date": "2026-06-21",
+          "input": 0.1,
+          "output": 0.32
+        }
+      ]
+    },
+    {
+      "id": "mistral-7b",
+      "company": "mistral",
+      "label": "Mistral 7B",
+      "tier": "small",
+      "or": null,
+      "prices": [
+        {
+          "date": "2023-09-27",
+          "input": 0.25,
+          "output": 0.25
+        }
+      ]
+    },
+    {
+      "id": "mixtral-8x7b",
+      "company": "mistral",
+      "label": "Mixtral 8x7B",
+      "tier": "mid",
+      "or": null,
+      "prices": [
+        {
+          "date": "2023-12-11",
+          "input": 0.7,
+          "output": 0.7
+        }
+      ]
+    },
+    {
+      "id": "mistral-large",
+      "company": "mistral",
+      "label": "Mistral Large",
+      "tier": "flagship",
+      "or": "mistralai/mistral-large",
+      "prices": [
+        {
+          "date": "2024-02-26",
+          "input": 8,
+          "output": 24
+        },
+        {
+          "date": "2024-07-24",
+          "input": 3,
+          "output": 9
+        },
+        {
+          "date": "2024-11-18",
+          "input": 2,
+          "output": 6
+        }
+      ]
+    },
+    {
+      "id": "mistral-small",
+      "company": "mistral",
+      "label": "Mistral Small",
+      "tier": "small",
+      "or": "mistralai/mistral-small-3.1-24b-instruct",
+      "prices": [
+        {
+          "date": "2024-02-26",
+          "input": 2,
+          "output": 6
+        },
+        {
+          "date": "2024-09-17",
+          "input": 1,
+          "output": 3
+        },
+        {
+          "date": "2025-03-17",
+          "input": 0.1,
+          "output": 0.3
+        },
+        {
+          "date": "2026-06-21",
+          "input": 0.351,
+          "output": 0.555
+        }
+      ]
+    },
+    {
+      "id": "grok-beta",
+      "company": "xai",
+      "label": "Grok Beta",
+      "tier": "flagship",
+      "or": null,
+      "prices": [
+        {
+          "date": "2024-11-01",
+          "input": 5,
+          "output": 15
+        }
+      ]
+    },
+    {
+      "id": "grok-2",
+      "company": "xai",
+      "label": "Grok 2",
+      "tier": "flagship",
+      "or": null,
+      "prices": [
+        {
+          "date": "2024-12-12",
+          "input": 2,
+          "output": 10
+        }
+      ]
+    },
+    {
+      "id": "grok-3",
+      "company": "xai",
+      "label": "Grok 3",
+      "tier": "flagship",
+      "or": null,
+      "prices": [
+        {
+          "date": "2025-04-09",
+          "input": 3,
+          "output": 15
+        }
+      ]
+    },
+    {
+      "id": "deepseek-v2",
+      "company": "deepseek",
+      "label": "DeepSeek-V2",
+      "tier": "flagship",
+      "or": null,
+      "prices": [
+        {
+          "date": "2024-05-06",
+          "input": 0.14,
+          "output": 0.28
+        }
+      ]
+    },
+    {
+      "id": "deepseek-v2.5",
+      "company": "deepseek",
+      "label": "DeepSeek-V2.5",
+      "tier": "flagship",
+      "or": null,
+      "prices": [
+        {
+          "date": "2024-09-05",
+          "input": 0.14,
+          "output": 0.28
+        }
+      ]
+    },
+    {
+      "id": "deepseek-v3",
+      "company": "deepseek",
+      "label": "DeepSeek-V3",
+      "tier": "flagship",
+      "or": "deepseek/deepseek-chat",
+      "prices": [
+        {
+          "date": "2024-12-26",
+          "input": 0.27,
+          "output": 1.1
+        },
+        {
+          "date": "2026-06-21",
+          "input": 0.2002,
+          "output": 0.8001
+        }
+      ]
+    },
+    {
+      "id": "deepseek-r1",
+      "company": "deepseek",
+      "label": "DeepSeek-R1",
+      "tier": "flagship",
+      "or": "deepseek/deepseek-r1",
+      "prices": [
+        {
+          "date": "2025-01-20",
+          "input": 0.55,
+          "output": 2.19
+        },
+        {
+          "date": "2026-06-21",
+          "input": 0.7,
+          "output": 2.5
+        }
+      ]
+    },
+    {
+      "id": "command",
+      "company": "cohere",
+      "label": "Command",
+      "tier": "flagship",
+      "or": null,
+      "prices": [
+        {
+          "date": "2023-09-01",
+          "input": 1,
+          "output": 2
+        }
+      ]
+    },
+    {
+      "id": "command-r",
+      "company": "cohere",
+      "label": "Command R",
+      "tier": "mid",
+      "or": "cohere/command-r-08-2024",
+      "prices": [
+        {
+          "date": "2024-03-11",
+          "input": 0.5,
+          "output": 1.5
+        },
+        {
+          "date": "2024-08-30",
+          "input": 0.15,
+          "output": 0.6
+        }
+      ]
+    },
+    {
+      "id": "command-r-plus",
+      "company": "cohere",
+      "label": "Command R+",
+      "tier": "flagship",
+      "or": "cohere/command-r-plus-08-2024",
+      "prices": [
+        {
+          "date": "2024-04-04",
+          "input": 3,
+          "output": 15
+        },
+        {
+          "date": "2024-08-30",
+          "input": 2.5,
+          "output": 10
+        }
+      ]
+    }
+  ]
+}

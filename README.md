@@ -44,11 +44,31 @@ each month — exactly how list pricing behaves.
 
 ## The data
 
-All pricing lives in [`lib/trax.js`](lib/trax.js) as effective-dated price
-points (`p('2024-05-13', 5, 15)` = $5 in / $15 out per million tokens from that
-date). Numbers are curated from public provider announcements and are
-approximate — edit the `MODELS` array to refine or extend. Add a model, add a
-price point, restart the server, done.
+All pricing lives in [`data/pricing.json`](data/pricing.json) as effective-dated
+price points (`{ "date": "2024-05-13", "input": 5, "output": 15 }` = $5 in /
+$15 out per million tokens from that date). Historical points are curated from
+public provider announcements; add a model or a point and the server picks it up
+on the next request (it re-reads the file each time).
+
+### Live auto-refresh (OpenRouter)
+
+The current price of each model auto-refreshes from the public
+[OpenRouter models API](https://openrouter.ai/api/v1/models). 23 of the 45
+tracked models carry an `or` slug (e.g. `"or": "openai/gpt-4o"`); the refresher
+looks up the live per-token price, and when it differs from the latest stored
+point it **appends a new point dated today** — so the index timeline grows with
+real market data over time. Older/retired models (no live slug) keep their
+curated history untouched.
+
+```bash
+npm run refresh          # pull live prices once, write data/pricing.json
+GET /api/refresh         # same thing over HTTP, returns a JSON summary
+```
+
+The server also runs a refresh on startup and every `REFRESH_HOURS` (default 6).
+Set `TRAX_NO_REFRESH=1` to disable, or click the ↻ button in the UI to pull on
+demand. Refresh is best-effort: with no network, TRAX serves the last-known
+prices and the server still starts.
 
 ## Caveats
 
