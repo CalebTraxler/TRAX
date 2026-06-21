@@ -14,7 +14,103 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      model_prices: {
+        Row: {
+          created_at: string
+          id: string
+          input_price: number
+          model_id: string
+          output_price: number
+          price_date: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          input_price: number
+          model_id: string
+          output_price: number
+          price_date: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          input_price?: number
+          model_id?: string
+          output_price?: number
+          price_date?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "model_prices_model_id_fkey"
+            columns: ["model_id"]
+            isOneToOne: false
+            referencedRelation: "models"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      models: {
+        Row: {
+          created_at: string
+          id: string
+          label: string
+          or_slug: string | null
+          provider_id: string
+          tier: Database["public"]["Enums"]["model_tier"]
+        }
+        Insert: {
+          created_at?: string
+          id: string
+          label: string
+          or_slug?: string | null
+          provider_id: string
+          tier: Database["public"]["Enums"]["model_tier"]
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          label?: string
+          or_slug?: string | null
+          provider_id?: string
+          tier?: Database["public"]["Enums"]["model_tier"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "models_provider_id_fkey"
+            columns: ["provider_id"]
+            isOneToOne: false
+            referencedRelation: "providers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      providers: {
+        Row: {
+          color: string
+          created_at: string
+          id: string
+          name: string
+          sort_order: number
+          weight: number
+        }
+        Insert: {
+          color?: string
+          created_at?: string
+          id: string
+          name: string
+          sort_order?: number
+          weight?: number
+        }
+        Update: {
+          color?: string
+          created_at?: string
+          id?: string
+          name?: string
+          sort_order?: number
+          weight?: number
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -23,7 +119,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      model_tier: "flagship" | "mid" | "small"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +246,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      model_tier: ["flagship", "mid", "small"],
+    },
   },
 } as const
