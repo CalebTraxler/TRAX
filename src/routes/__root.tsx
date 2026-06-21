@@ -157,15 +157,15 @@ function SiteHeader() {
   return (
     <header className="sticky top-0 z-40 border-b border-border/60 bg-background/80 backdrop-blur">
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4">
-        <Link to="/" className="flex items-center gap-2 font-bold tracking-tight">
+        <Link to="/" className="flex items-center gap-2.5 font-bold tracking-tight">
           <img
             src={logoUrl}
             alt="TRAX logo"
-            width={28}
-            height={28}
-            className="h-7 w-7 rounded-md object-contain"
+            width={36}
+            height={36}
+            className="h-9 w-9 object-contain drop-shadow-[0_0_8px_rgba(45,212,191,0.35)]"
           />
-          <span>TRAX</span>
+          <span className="text-lg">TRAX</span>
           <span className="hidden text-xs font-normal text-muted-foreground sm:inline">
             AI Token Cost Index
           </span>
