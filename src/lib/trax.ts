@@ -223,10 +223,64 @@ export function buildPayload(data: PricingData, metric: Metric = "blended"): Tra
   };
 }
 
+import { supabase } from "@/integrations/supabase/client";
+
+/**
+ * Fetches the full pricing dataset from Supabase in three parallel queries.
+ * Tables are publicly readable (anon SELECT policy), so this runs straight
+ * from the browser — TanStack Query caches the result across routes.
+ */
 export async function fetchPricing(): Promise<PricingData> {
-  const res = await fetch("/data/pricing.json");
-  if (!res.ok) throw new Error(`failed to load pricing: ${res.status}`);
-  return res.json();
+  const [provRes, modRes, priceRes] = await Promise.all([
+    supabase.from("providers").select("id,name,weight,color,sort_order").order("sort_order"),
+    supabase.from("models").select("id,provider_id,label,tier,or_slug"),
+    supabase
+      .from("model_prices")
+      .select("model_id,price_date,input_price,output_price")
+      .order("price_date", { ascending: true }),
+  ]);
+
+  if (provRes.error) throw provRes.error;
+  if (modRes.error) throw modRes.error;
+  if (priceRes.error) throw priceRes.error;
+
+  const companies: Record<string, Company> = {};
+  for (const p of provRes.data ?? []) {
+    companies[p.id] = {
+      name: p.name,
+      weight: Number(p.weight),
+      color: p.color,
+    };
+  }
+
+  const pricesByModel = new Map<string, PricePoint[]>();
+  for (const row of priceRes.data ?? []) {
+    const arr = pricesByModel.get(row.model_id) ?? [];
+    arr.push({
+      date: row.price_date,
+      input: Number(row.input_price),
+      output: Number(row.output_price),
+    });
+    pricesByModel.set(row.model_id, arr);
+  }
+
+  const models: Model[] = (modRes.data ?? []).map((m) => ({
+    id: m.id,
+    company: m.provider_id,
+    label: m.label,
+    tier: m.tier as Tier,
+    or: m.or_slug,
+    prices: pricesByModel.get(m.id) ?? [],
+  }));
+
+  return {
+    meta: {
+      source: "supabase",
+      note: "Live data served from Lovable Cloud (PostgreSQL).",
+    },
+    companies,
+    models,
+  };
 }
 
 /* ---------- Candlestick OHLC synthesis ---------- */
