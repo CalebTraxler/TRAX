@@ -77,11 +77,19 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "TRAX — AI Token Cost Index" },
+      {
+        name: "description",
+        content:
+          "TRAX is a real-time cost index for the major AI providers. Think S&P 500, but for the price of a token.",
+      },
+      { name: "author", content: "TRAX" },
+      { property: "og:title", content: "TRAX — AI Token Cost Index" },
+      {
+        property: "og:description",
+        content:
+          "Track how AI token prices have moved across OpenAI, Anthropic, Google, Meta, Mistral, xAI, DeepSeek and Cohere.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
@@ -118,8 +126,75 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <Outlet />
+      <div className="flex min-h-screen flex-col bg-background text-foreground">
+        <SiteHeader />
+        <main className="flex-1">
+          {/* Required: nested routes render here. */}
+          <Outlet />
+        </main>
+        <SiteFooter />
+      </div>
     </QueryClientProvider>
+  );
+}
+
+const NAV = [
+  { to: "/", label: "Home" },
+  { to: "/dashboard", label: "Index" },
+  { to: "/models", label: "Models" },
+  { to: "/methodology", label: "Methodology" },
+  { to: "/about", label: "About" },
+] as const;
+
+function SiteHeader() {
+  return (
+    <header className="sticky top-0 z-40 border-b border-border/60 bg-background/80 backdrop-blur">
+      <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4">
+        <Link to="/" className="flex items-center gap-2 font-bold tracking-tight">
+          <span className="inline-block h-2.5 w-2.5 rounded-full bg-teal-400 shadow-[0_0_12px_rgba(45,212,191,0.8)]" />
+          <span>TRAX</span>
+          <span className="hidden text-xs font-normal text-muted-foreground sm:inline">
+            AI Token Cost Index
+          </span>
+        </Link>
+        <nav className="flex items-center gap-1 text-sm">
+          {NAV.map((item) => (
+            <Link
+              key={item.to}
+              to={item.to}
+              className="rounded-md px-3 py-1.5 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+              activeProps={{ className: "rounded-md px-3 py-1.5 bg-accent text-foreground" }}
+              activeOptions={{ exact: item.to === "/" }}
+            >
+              {item.label}
+            </Link>
+          ))}
+        </nav>
+      </div>
+    </header>
+  );
+}
+
+function SiteFooter() {
+  return (
+    <footer className="border-t border-border/60 bg-background">
+      <div className="mx-auto flex max-w-6xl flex-col gap-2 px-4 py-6 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
+        <p>
+          TRAX is an analytics tool — not financial advice or a tradable instrument.
+        </p>
+        <p>
+          MIT licensed. Based on{" "}
+          <a
+            href="https://github.com/CalebTraxler/TRAX"
+            className="underline hover:text-foreground"
+            target="_blank"
+            rel="noreferrer"
+          >
+            CalebTraxler/TRAX
+          </a>
+          .
+        </p>
+      </div>
+    </footer>
   );
 }
