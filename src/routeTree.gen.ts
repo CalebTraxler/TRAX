@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ModelsRouteImport } from './routes/models'
 import { Route as MethodologyRouteImport } from './routes/methodology'
+import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as CompanyCompanyIdRouteImport } from './routes/company.$companyId'
@@ -23,6 +24,11 @@ const ModelsRoute = ModelsRouteImport.update({
 const MethodologyRoute = MethodologyRouteImport.update({
   id: '/methodology',
   path: '/methodology',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AboutRoute = AboutRouteImport.update({
@@ -44,6 +50,7 @@ const CompanyCompanyIdRoute = CompanyCompanyIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/dashboard': typeof DashboardRoute
   '/methodology': typeof MethodologyRoute
   '/models': typeof ModelsRoute
   '/company/$companyId': typeof CompanyCompanyIdRoute
@@ -51,6 +58,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/dashboard': typeof DashboardRoute
   '/methodology': typeof MethodologyRoute
   '/models': typeof ModelsRoute
   '/company/$companyId': typeof CompanyCompanyIdRoute
@@ -59,19 +67,33 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/dashboard': typeof DashboardRoute
   '/methodology': typeof MethodologyRoute
   '/models': typeof ModelsRoute
   '/company/$companyId': typeof CompanyCompanyIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/methodology' | '/models' | '/company/$companyId'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/dashboard'
+    | '/methodology'
+    | '/models'
+    | '/company/$companyId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/methodology' | '/models' | '/company/$companyId'
+  to:
+    | '/'
+    | '/about'
+    | '/dashboard'
+    | '/methodology'
+    | '/models'
+    | '/company/$companyId'
   id:
     | '__root__'
     | '/'
     | '/about'
+    | '/dashboard'
     | '/methodology'
     | '/models'
     | '/company/$companyId'
@@ -80,6 +102,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  DashboardRoute: typeof DashboardRoute
   MethodologyRoute: typeof MethodologyRoute
   ModelsRoute: typeof ModelsRoute
   CompanyCompanyIdRoute: typeof CompanyCompanyIdRoute
@@ -99,6 +122,13 @@ declare module '@tanstack/react-router' {
       path: '/methodology'
       fullPath: '/methodology'
       preLoaderRoute: typeof MethodologyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/about': {
@@ -128,6 +158,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  DashboardRoute: DashboardRoute,
   MethodologyRoute: MethodologyRoute,
   ModelsRoute: ModelsRoute,
   CompanyCompanyIdRoute: CompanyCompanyIdRoute,
