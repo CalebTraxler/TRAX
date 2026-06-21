@@ -11,7 +11,6 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
-import logoUrl from "../assets/trax-logo.png";
 
 function NotFoundComponent() {
   return (
@@ -158,13 +157,8 @@ function SiteHeader() {
     <header className="sticky top-0 z-40 border-b border-border/60 bg-background/80 backdrop-blur">
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4">
         <Link to="/" className="flex items-center gap-2 font-bold tracking-tight">
-          <img
-            src={logoUrl}
-            alt="TRAX logo"
-            width={28}
-            height={28}
-            className="h-7 w-7"
-          />
+          <span className="inline-block h-2.5 w-2.5 rounded-full bg-teal-400 shadow-[0_0_12px_rgba(45,212,191,0.8)]" />
+          <span>TRAX</span>
           <span className="hidden text-xs font-normal text-muted-foreground sm:inline">
             AI Token Cost Index
           </span>

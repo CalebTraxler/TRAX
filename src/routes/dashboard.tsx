@@ -1,7 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Link } from "@tanstack/react-router";
 import {
   Line,
   LineChart,
@@ -183,18 +182,16 @@ function Dashboard() {
             </h2>
             <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
               {payload.companies.map((c) => (
-                <Link
+                <div
                   key={c.id}
-                  to="/company/$id"
-                  params={{ id: c.id }}
-                  className="group rounded-lg border border-border bg-background p-3 transition-colors hover:border-primary/60 hover:bg-accent"
+                  className="rounded-lg border border-border bg-background p-3"
                 >
                   <div className="flex items-center gap-2">
                     <span
                       className="inline-block h-2.5 w-2.5 rounded-full"
                       style={{ background: c.color }}
                     />
-                    <span className="font-medium group-hover:text-foreground">{c.name}</span>
+                    <span className="font-medium">{c.name}</span>
                     <span className="ml-auto text-xs text-muted-foreground">
                       w {(c.weight * 100).toFixed(0)}%
                     </span>
@@ -212,10 +209,7 @@ function Dashboard() {
                     {c.allTimeChange > 0 ? "+" : ""}
                     {c.allTimeChange}% since launch
                   </div>
-                  <div className="mt-2 text-[10px] uppercase tracking-wider text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100">
-                    View candlestick chart →
-                  </div>
-                </Link>
+                </div>
               ))}
             </div>
           </section>
