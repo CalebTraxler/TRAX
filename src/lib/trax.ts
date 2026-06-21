@@ -125,10 +125,19 @@ export interface ModelRow {
   blended: number;
   launched: string;
   changeSinceLaunch: number;
+  live: boolean;
 }
 
 export interface TraxPayload {
-  meta: { base: string; asOf: string; metric: Metric; methodology: string };
+  meta: {
+    base: string;
+    asOf: string;
+    metric: Metric;
+    methodology: string;
+    lastUpdated: string | null; // most recent effective price date in the dataset
+    lastRefresh?: string; // when the snapshot was last refreshed from a live API
+    source?: string;
+  };
   months: string[];
   index: (number | null)[];
   indexStats: {
@@ -190,6 +199,7 @@ export function buildPayload(data: PricingData, metric: Metric = "blended"): Tra
         blended: +nowBlend.toFixed(3),
         launched: firstPt.date,
         changeSinceLaunch: +(((nowBlend - launchBlend) / launchBlend) * 100).toFixed(1),
+        live: m.or != null,
       } satisfies ModelRow;
     })
     .filter((r): r is ModelRow => r != null)
@@ -200,6 +210,11 @@ export function buildPayload(data: PricingData, metric: Metric = "blended"): Tra
   const idx12 = index.length > 12 ? index[index.length - 13] : firstIdx;
   const numericIndex = index.filter((v): v is number => v != null);
 
+  let lastUpdated: string | null = null;
+  for (const m of data.models) {
+    for (const p of m.prices) if (lastUpdated == null || p.date > lastUpdated) lastUpdated = p.date;
+  }
+
   return {
     meta: {
       base: BASE_MONTH,
@@ -207,6 +222,9 @@ export function buildPayload(data: PricingData, metric: Metric = "blended"): Tra
       metric,
       methodology:
         "TRAX = 100 × V(t)/V(base); V = company-weighted mean of tier-weighted blended (0.75·in + 0.25·out) $/Mtok. Lower = cheaper.",
+      lastUpdated,
+      lastRefresh: data.meta?.lastRefresh,
+      source: data.meta?.source,
     },
     months,
     index,
@@ -226,11 +244,36 @@ export function buildPayload(data: PricingData, metric: Metric = "blended"): Tra
 import { supabase } from "@/integrations/supabase/client";
 
 /**
+ * Static fallback: the bundled `public/data/pricing.json` already matches the
+ * PricingData shape, so we can serve it directly when Supabase is unavailable
+ * (missing env vars, paused project, offline). Keeps the app — and local dev —
+ * working with real data and no secrets.
+ */
+async function fetchStaticPricing(): Promise<PricingData> {
+  const res = await fetch("/data/pricing.json");
+  if (!res.ok) throw new Error(`static pricing ${res.status}`);
+  return (await res.json()) as PricingData;
+}
+
+/**
  * Fetches the full pricing dataset from Supabase in three parallel queries.
  * Tables are publicly readable (anon SELECT policy), so this runs straight
  * from the browser — TanStack Query caches the result across routes.
+ * Falls back to the bundled JSON snapshot if Supabase can't be reached.
  */
 export async function fetchPricing(): Promise<PricingData> {
+  try {
+    return await fetchPricingFromSupabase();
+  } catch (err) {
+    if (typeof window !== "undefined") {
+      console.warn("[TRAX] Supabase unavailable, using bundled pricing.json", err);
+      return fetchStaticPricing();
+    }
+    throw err;
+  }
+}
+
+async function fetchPricingFromSupabase(): Promise<PricingData> {
   const [provRes, modRes, priceRes] = await Promise.all([
     supabase.from("providers").select("id,name,weight,color,sort_order").order("sort_order"),
     supabase.from("models").select("id,provider_id,label,tier,or_slug"),

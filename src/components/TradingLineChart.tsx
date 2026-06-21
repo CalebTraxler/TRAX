@@ -1,7 +1,7 @@
 import { useMemo, useState, useRef, useLayoutEffect } from "react";
 
 export interface LinePoint {
-  x: string;       // label, e.g. "2024-03"
+  x: string; // label, e.g. "2024-03"
   y: number | null;
 }
 
@@ -10,7 +10,7 @@ export interface SeriesSpec {
   name: string;
   color: string;
   data: LinePoint[];
-  emphasis?: boolean;  // thicker stroke + glow
+  emphasis?: boolean; // thicker stroke + glow
 }
 
 interface Props {
@@ -18,25 +18,27 @@ interface Props {
   height?: number;
   logScale?: boolean;
   yFormat?: (v: number) => string;
+  /** Render clickable legend chips that toggle series visibility. */
+  interactiveLegend?: boolean;
+  ariaLabel?: string;
 }
 
-const COLORS = {
-  bg: "#0b1220",
-  grid: "#1e293b",
-  axis: "#475569",
-  text: "#94a3b8",
-  cross: "#64748b",
-};
+const GRID = "var(--chart-grid)";
+const AXIS = "var(--chart-axis)";
+const CHART_BG = "var(--chart-bg)";
 
 export function TradingLineChart({
   series,
   height = 360,
   logScale = false,
   yFormat = (v) => (v < 1 ? v.toFixed(3) : v.toFixed(2)),
+  interactiveLegend = false,
+  ariaLabel = "Line chart",
 }: Props) {
   const wrapRef = useRef<HTMLDivElement>(null);
   const [w, setW] = useState(900);
   const [hover, setHover] = useState<number | null>(null);
+  const [hidden, setHidden] = useState<Set<string>>(new Set());
 
   useLayoutEffect(() => {
     if (!wrapRef.current) return;
@@ -46,6 +48,11 @@ export function TradingLineChart({
     ro.observe(wrapRef.current);
     return () => ro.disconnect();
   }, []);
+
+  const shown = useMemo(
+    () => series.filter((s) => !hidden.has(s.id)),
+    [series, hidden],
+  );
 
   const padL = 52;
   const padR = 16;
@@ -59,7 +66,7 @@ export function TradingLineChart({
 
   const { minY, maxY, yTicks } = useMemo(() => {
     let lo = Infinity, hi = -Infinity;
-    for (const s of series) {
+    for (const s of shown) {
       for (const p of s.data) {
         if (p.y == null) continue;
         if (p.y < lo) lo = p.y;
@@ -84,7 +91,7 @@ export function TradingLineChart({
     const steps = 5;
     for (let i = 0; i <= steps; i++) ticks.push(lo + ((hi - lo) * i) / steps);
     return { minY: lo, maxY: hi, yTicks: ticks };
-  }, [series, logScale]);
+  }, [shown, logScale]);
 
   const xScale = (i: number) => padL + (n <= 1 ? innerW / 2 : (innerW * i) / (n - 1));
   const yScale = (v: number) => {
@@ -102,12 +109,23 @@ export function TradingLineChart({
 
   if (n === 0) return null;
 
+  function toggle(id: string) {
+    setHidden((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else if (shown.length > 1) next.add(id); // keep at least one series
+      return next;
+    });
+  }
+
   return (
     <div ref={wrapRef} className="relative w-full select-none">
       <svg
         width={w}
         height={height}
         className="block"
+        role="img"
+        aria-label={ariaLabel}
         onMouseLeave={() => setHover(null)}
         onMouseMove={(e) => {
           const rect = (e.currentTarget as SVGSVGElement).getBoundingClientRect();
@@ -117,45 +135,22 @@ export function TradingLineChart({
           else setHover(idx);
         }}
       >
-        <rect x={0} y={0} width={w} height={height} fill={COLORS.bg} />
+        <rect x={0} y={0} width={w} height={height} style={{ fill: CHART_BG }} />
 
         {yTicks.map((t, i) => (
           <g key={i}>
-            <line
-              x1={padL}
-              x2={w - padR}
-              y1={yScale(t)}
-              y2={yScale(t)}
-              stroke={COLORS.grid}
-              strokeDasharray="2 4"
-            />
-            <text
-              x={padL - 6}
-              y={yScale(t)}
-              textAnchor="end"
-              dominantBaseline="middle"
-              fontSize={10}
-              fill={COLORS.text}
-              fontFamily="ui-monospace, SFMono-Regular, monospace"
-            >
+            <line x1={padL} x2={w - padR} y1={yScale(t)} y2={yScale(t)} style={{ stroke: GRID }} strokeDasharray="2 4" />
+            <text x={padL - 6} y={yScale(t)} textAnchor="end" dominantBaseline="middle" fontSize={10} style={{ fill: AXIS }} fontFamily="var(--font-mono)">
               {yFormat(t)}
             </text>
           </g>
         ))}
 
         {xTickIdx.map((i) => (
-          <line
-            key={`vg-${i}`}
-            x1={xScale(i)}
-            x2={xScale(i)}
-            y1={padT}
-            y2={padT + innerH}
-            stroke={COLORS.grid}
-            strokeDasharray="2 4"
-          />
+          <line key={`vg-${i}`} x1={xScale(i)} x2={xScale(i)} y1={padT} y2={padT + innerH} style={{ stroke: GRID }} strokeDasharray="2 4" />
         ))}
 
-        {series.map((s) => {
+        {shown.map((s) => {
           let d = "";
           let inPath = false;
           for (let i = 0; i < s.data.length; i++) {
@@ -171,51 +166,28 @@ export function TradingLineChart({
               d={d}
               fill="none"
               stroke={s.color}
-              strokeWidth={s.emphasis ? 2.25 : 1.5}
+              strokeWidth={s.emphasis ? 2.5 : 1.5}
               strokeLinejoin="round"
               strokeLinecap="round"
-              style={s.emphasis ? { filter: `drop-shadow(0 0 6px ${s.color}55)` } : undefined}
+              style={s.emphasis ? { filter: `drop-shadow(0 0 6px ${s.color}66)` } : undefined}
             />
           );
         })}
 
         {xTickIdx.map((i) => (
-          <text
-            key={`xl-${i}`}
-            x={xScale(i)}
-            y={height - 10}
-            textAnchor="middle"
-            fontSize={10}
-            fill={COLORS.text}
-            fontFamily="ui-monospace, SFMono-Regular, monospace"
-          >
+          <text key={`xl-${i}`} x={xScale(i)} y={height - 10} textAnchor="middle" fontSize={10} style={{ fill: AXIS }} fontFamily="var(--font-mono)">
             {xLabels[i]}
           </text>
         ))}
 
         {hover != null && (
           <g pointerEvents="none">
-            <line
-              x1={xScale(hover)}
-              x2={xScale(hover)}
-              y1={padT}
-              y2={padT + innerH}
-              stroke={COLORS.cross}
-              strokeDasharray="2 3"
-            />
-            {series.map((s) => {
+            <line x1={xScale(hover)} x2={xScale(hover)} y1={padT} y2={padT + innerH} style={{ stroke: AXIS }} strokeDasharray="2 3" />
+            {shown.map((s) => {
               const v = s.data[hover]?.y;
               if (v == null) return null;
               return (
-                <circle
-                  key={s.id}
-                  cx={xScale(hover)}
-                  cy={yScale(v)}
-                  r={s.emphasis ? 4 : 3}
-                  fill={COLORS.bg}
-                  stroke={s.color}
-                  strokeWidth={2}
-                />
+                <circle key={s.id} cx={xScale(hover)} cy={yScale(v)} r={s.emphasis ? 4 : 3} style={{ fill: CHART_BG }} stroke={s.color} strokeWidth={2} />
               );
             })}
           </g>
@@ -224,26 +196,37 @@ export function TradingLineChart({
 
       {hover != null && (
         <div
-          className="pointer-events-none absolute rounded-md border border-slate-700 bg-slate-900/95 px-3 py-2 font-mono text-[11px] text-slate-200 shadow-xl"
-          style={{
-            left: Math.min(w - 180, Math.max(8, xScale(hover) + 10)),
-            top: 12,
-          }}
+          className="pointer-events-none absolute z-10 rounded-md border border-border bg-popover/95 px-3 py-2 font-mono text-[11px] text-popover-foreground shadow-xl backdrop-blur"
+          style={{ left: Math.min(w - 180, Math.max(8, xScale(hover) + 10)), top: 12 }}
         >
-          <div className="mb-1 text-[10px] uppercase tracking-wider text-slate-400">
-            {xLabels[hover]}
-          </div>
-          {series.map((s) => {
+          <div className="mb-1 text-[10px] uppercase tracking-wider text-muted-foreground">{xLabels[hover]}</div>
+          {shown.map((s) => {
             const v = s.data[hover]?.y;
             return (
               <div key={s.id} className="flex items-center gap-2">
-                <span
-                  className="inline-block h-2 w-2 rounded-full"
-                  style={{ background: s.color }}
-                />
-                <span className="w-20 truncate text-slate-400">{s.name}</span>
+                <span className="inline-block h-2 w-2 rounded-full" style={{ background: s.color }} />
+                <span className="w-20 truncate text-muted-foreground">{s.name}</span>
                 <span className="ml-auto">{v == null ? "—" : yFormat(v)}</span>
               </div>
+            );
+          })}
+        </div>
+      )}
+
+      {interactiveLegend && series.length > 1 && (
+        <div className="flex flex-wrap gap-x-3 gap-y-1.5 border-t border-border px-4 py-2.5 text-[11px]">
+          {series.map((s) => {
+            const off = hidden.has(s.id);
+            return (
+              <button
+                key={s.id}
+                type="button"
+                onClick={() => toggle(s.id)}
+                className={"flex items-center gap-1.5 rounded transition-opacity hover:opacity-100 " + (off ? "opacity-40" : "")}
+              >
+                <span className="inline-block h-2 w-2 rounded-full" style={{ background: s.color }} />
+                <span className={off ? "text-muted-foreground line-through" : "text-foreground"}>{s.name}</span>
+              </button>
             );
           })}
         </div>

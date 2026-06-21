@@ -1,6 +1,6 @@
 {
   "meta": {
-    "lastRefresh": "2026-06-21T00:14:57.093Z",
+    "lastRefresh": "2026-06-21T01:43:48.039Z",
     "source": "https://openrouter.ai/api/v1/models",
     "note": "Historical price points are curated from public provider announcements (per million tokens, USD). `npm run refresh` pulls current live prices from OpenRouter for models with an `or` slug and appends a dated point when the price has changed."
   },
@@ -824,6 +824,11 @@
           "date": "2025-04-16",
           "input": 10,
           "output": 40
+        },
+        {
+          "date": "2026-06-21",
+          "input": 2,
+          "output": 8
         }
       ]
     },
@@ -838,6 +843,11 @@
           "date": "2025-11-24",
           "input": 15,
           "output": 75
+        },
+        {
+          "date": "2026-06-21",
+          "input": 5,
+          "output": 25
         }
       ]
     },
@@ -880,6 +890,11 @@
           "date": "2025-12-10",
           "input": 0.3,
           "output": 2.5
+        },
+        {
+          "date": "2026-06-21",
+          "input": 0.5,
+          "output": 3
         }
       ]
     },
@@ -894,6 +909,11 @@
           "date": "2025-04-05",
           "input": 0.27,
           "output": 0.85
+        },
+        {
+          "date": "2026-06-21",
+          "input": 0.15,
+          "output": 0.6
         }
       ]
     },
@@ -908,6 +928,11 @@
           "date": "2025-04-05",
           "input": 0.11,
           "output": 0.34
+        },
+        {
+          "date": "2026-06-21",
+          "input": 0.1,
+          "output": 0.3
         }
       ]
     },
@@ -950,6 +975,11 @@
           "date": "2025-08-21",
           "input": 0.27,
           "output": 1.1
+        },
+        {
+          "date": "2026-06-21",
+          "input": 0.21,
+          "output": 0.79
         }
       ]
     },
