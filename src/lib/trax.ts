@@ -228,3 +228,56 @@ export async function fetchPricing(): Promise<PricingData> {
   if (!res.ok) throw new Error(`failed to load pricing: ${res.status}`);
   return res.json();
 }
+
+export interface Candle {
+  time: string; // YYYY-MM-DD (first of month)
+  open: number;
+  high: number;
+  low: number;
+  close: number;
+}
+
+/**
+ * Build month-by-month OHLC candles for a company's blended token cost.
+ * - open: previous month's weighted blended price (or this month's if first)
+ * - close: this month's tier-weighted blended price
+ * - high/low: across the company's individual model blended prices that month
+ *   (gives realistic wicks from the dispersion of the model lineup)
+ */
+export function buildCompanyCandles(
+  data: PricingData,
+  companyId: string,
+  metric: Metric = "blended",
+): Candle[] {
+  const months = monthsBetween(BASE_MONTH, currentMonth());
+  const candles: Candle[] = [];
+  let prevClose: number | null = null;
+
+  for (const ym of months) {
+    const close = companyPriceAt(data, companyId, ym, metric);
+    if (close == null) continue;
+
+    // dispersion: min/max across model blended prices for this company this month
+    const modelVals: number[] = [];
+    for (const m of data.models) {
+      if (m.company !== companyId) continue;
+      const pt = priceAsOf(m, ym);
+      if (!pt) continue;
+      modelVals.push(metricValue(pt, metric));
+    }
+    const open = prevClose ?? close;
+    const candidateHL = [open, close, ...modelVals];
+    const high = Math.max(...candidateHL);
+    const low = Math.min(...candidateHL.filter((v) => v > 0));
+
+    candles.push({
+      time: `${ym}-01`,
+      open: +open.toFixed(4),
+      high: +high.toFixed(4),
+      low: +low.toFixed(4),
+      close: +close.toFixed(4),
+    });
+    prevClose = close;
+  }
+  return candles;
+}
