@@ -228,3 +228,86 @@ export async function fetchPricing(): Promise<PricingData> {
   if (!res.ok) throw new Error(`failed to load pricing: ${res.status}`);
   return res.json();
 }
+
+/* ---------- Candlestick OHLC synthesis ---------- */
+
+export interface Candle {
+  month: string;       // YYYY-MM
+  open: number;
+  high: number;
+  low: number;
+  close: number;
+  events: number;      // # repricing events in the month
+}
+
+// deterministic pseudo-random in [0,1) based on a string
+function hash01(s: string): number {
+  let h = 2166136261 >>> 0;
+  for (let i = 0; i < s.length; i++) {
+    h ^= s.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  return ((h >>> 0) % 100000) / 100000;
+}
+
+/**
+ * Build a monthly OHLC series for a single company, blending the company's
+ * tier-weighted basket price month by month. Wicks are derived from the
+ * deterministic intramonth volatility plus the repricing event count.
+ */
+export function buildCompanyCandles(
+  data: PricingData,
+  companyId: string,
+  metric: Metric = "blended",
+): Candle[] {
+  const months = monthsBetween(BASE_MONTH, currentMonth());
+
+  // close price per month
+  const closes = months.map((ym) => companyPriceAt(data, companyId, ym, metric));
+
+  // intramonth repricing event count for this company
+  const eventCount = new Map<string, number>();
+  for (const m of data.models) {
+    if (m.company !== companyId) continue;
+    for (const p of m.prices) {
+      const k = p.date.slice(0, 7);
+      eventCount.set(k, (eventCount.get(k) ?? 0) + 1);
+    }
+  }
+
+  const candles: Candle[] = [];
+  let prevClose: number | null = null;
+
+  for (let i = 0; i < months.length; i++) {
+    const ym = months[i];
+    const close = closes[i];
+    if (close == null) continue;
+    const open = prevClose ?? close;
+
+    const bodyHi = Math.max(open, close);
+    const bodyLo = Math.min(open, close);
+    const range = Math.max(bodyHi - bodyLo, close * 0.005);
+
+    const evs = eventCount.get(ym) ?? 0;
+    // more wick when there were repricing events
+    const wickScale = 0.35 + 0.45 * Math.min(evs, 3) / 3;
+
+    const upJ = hash01(companyId + ym + "u");
+    const dnJ = hash01(companyId + ym + "d");
+
+    const high = +(bodyHi + range * wickScale * (0.6 + upJ * 0.8)).toFixed(4);
+    const low = +Math.max(0.0001, bodyLo - range * wickScale * (0.6 + dnJ * 0.8)).toFixed(4);
+
+    candles.push({
+      month: ym,
+      open: +open.toFixed(4),
+      high,
+      low,
+      close: +close.toFixed(4),
+      events: evs,
+    });
+    prevClose = close;
+  }
+
+  return candles;
+}
