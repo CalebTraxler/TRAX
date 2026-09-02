@@ -1,6 +1,6 @@
 {
   "meta": {
-    "lastRefresh": "2026-09-01T11:44:28.524Z",
+    "lastRefresh": "2026-09-02T11:25:40.218Z",
     "source": "https://openrouter.ai/api/v1/models",
     "note": "Historical price points are curated from public provider announcements (per million tokens, USD). `npm run refresh` pulls current live prices from OpenRouter for models with an `or` slug and appends a dated point when the price has changed."
   },
@@ -1040,6 +1040,11 @@
           "date": "2026-08-22",
           "input": 0.55,
           "output": 1.65
+        },
+        {
+          "date": "2026-09-02",
+          "input": 0.25,
+          "output": 0.95
         }
       ]
     },
